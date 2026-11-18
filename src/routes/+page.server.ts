@@ -11,18 +11,18 @@ export const actions = {
 		const pesan = String(data.get('pesan') ?? '').trim();
 
 		if (!nama || !email || !pesan) {
-			return fail(400, { pesan: 'Semua kolom harus diisi.' });
+			return fail(400, { message: 'Please fill in all fields.' });
 		}
 
 		if (!email.includes('@')) {
-			return fail(400, { pesan: 'Format email belum benar.' });
+			return fail(400, { message: 'Please enter a valid email address.' });
 		}
 
 		const kunci = RESEND_API_KEY;
 		const tujuan = RESEND_TO;
 
 		if (!kunci || !tujuan) {
-			return fail(500, { pesan: 'Kunci Resend belum dipasang di .env.' });
+			return fail(500, { message: 'Message sending is not set up yet.' });
 		}
 
 		const balasan = await fetch('https://api.resend.com/emails', {
@@ -32,21 +32,21 @@ export const actions = {
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
-				// Resend hanya mengizinkan pengirim ini selama domain kalian
-				// belum diverifikasi.
-				from: 'Portofolio <onboarding@resend.dev>',
+				from: 'qila.exe <onboarding@resend.dev>',
 				to: [tujuan],
 				reply_to: email,
-				subject: `Pesan dari ${nama}`,
-				text: `${pesan}\n\n— ${nama} <${email}>`
+				subject: `Message from ${nama}`,
+				text: `${pesan}
+
+-- ${nama} <${email}>`
 			})
 		});
 
 		if (!balasan.ok) {
-			console.error('Resend menolak:', balasan.status, await balasan.text());
-			return fail(502, { pesan: 'Gagal mengirim. Coba lagi.' });
+			console.error('Resend rejected request:', balasan.status, await balasan.text());
+			return fail(502, { message: 'Could not send your message. Please try again.' });
 		}
 
-		return { sukses: true };
+		return { success: true };
 	}
 } satisfies Actions;

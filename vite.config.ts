@@ -1,5 +1,6 @@
 import tailwindcss from '@tailwindcss/vite';
-import adapter from '@sveltejs/adapter-vercel';
+import adapterVercel from '@sveltejs/adapter-vercel';
+import adapterAuto from '@sveltejs/adapter-auto';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
@@ -17,9 +18,10 @@ export default defineConfig({
 					filename.split(/[/\\]/).includes('node_modules') ? undefined : true
 			},
 
-			// Adapter menentukan bentuk hasil build. Vercel butuh adapter
-			// sendiri; `adapter-auto` hanya menebak dan tidak selalu benar.
-			adapter: adapter()
+			// Vercel deployments must use the Vercel adapter. Locally we fall back to
+			// adapter-auto so Windows builds can complete (adapter-vercel's final
+			// symlink step can fail with EPERM on some Windows setups).
+			adapter: process.env.VERCEL ? adapterVercel() : adapterAuto()
 		})
 	]
 });

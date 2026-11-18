@@ -24,3 +24,7 @@ vite.config.ts.timestamp-*
 
 # IDE
 .openidea/
+.vscode/
+
+# Stray nested clone of this repo
+/oots-portfolio-2026/

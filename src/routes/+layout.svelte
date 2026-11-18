@@ -9,12 +9,11 @@
 	let { children }: LayoutProps = $props();
 
 	onMount(() => {
-		// Kalau sistem diminta minim gerakan, biarkan browser yang mengurus
-		// scroll. Scroll halus yang dipaksakan bisa bikin pusing.
+		// Respect the visitor's motion preference: the browser scrolls natively.
 		if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-		// `anchors: true` wajib. Tanpa ini, Lenis justru mematikan link #proyek.
-		const lenis = new Lenis({ anchors: true });
+		// `anchors: true` keeps #about / #projects links working with Lenis.
+		const lenis = new Lenis({ anchors: true, lerp: 0.1 });
 
 		let frame = requestAnimationFrame(function raf(time) {
 			lenis.raf(time);
@@ -30,7 +29,13 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
-	<title>Portofolio — OOTS 2026</title>
+	<title>Qila — Student Developer</title>
+	<meta property="og:title" content="qila.exe — a little corner of the internet" />
+	<meta
+		property="og:description"
+		content="A student developer learning in public. Pink pixels, small projects, and a lot of curiosity."
+	/>
+	<meta property="og:type" content="website" />
 </svelte:head>
 
 {@render children()}
