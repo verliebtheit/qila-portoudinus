@@ -115,8 +115,8 @@ export const about: About = {
 	details: [
 		{ label: 'Name', value: 'Qila' },
 		{ label: 'Role', value: 'Student Developer' },
-		{ label: 'Personality', value: 'Creative, curious, playful, and a little quirky' },
-		{ label: 'Vibe', value: 'Late 90s / early 2000s retro computer feel' }
+		{ label: 'Focus', value: 'Web & Game Development' },
+		{ label: 'Interests', value: 'Programming, Gaming, Photography & Music' }
 	]
 };
 
