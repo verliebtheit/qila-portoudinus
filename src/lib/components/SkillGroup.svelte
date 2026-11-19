@@ -15,7 +15,9 @@
 	class="pixel-border-sm flex h-full flex-col bg-cream p-4"
 	aria-label={group.title}
 >
-	<div class="mb-3 flex items-center justify-between gap-2 border-b-2 border-dotted border-line-soft pb-2">
+	<div
+		class="mb-3 flex items-center justify-between gap-2 border-b-2 border-dotted border-line-soft pb-2"
+	>
 		<h3 class="font-pixel text-2xl text-ink">{group.title}</h3>
 		<span aria-hidden="true" class="text-rose-deep">✦</span>
 	</div>

@@ -13,15 +13,13 @@
 
 	let index = $state(0);
 	let open = $state(false);
-	let visits = $state<number | null>(null);
 
 	onMount(() => {
 		try {
 			const next = Number(localStorage.getItem('qila.visits') ?? 0) + 1;
 			localStorage.setItem('qila.visits', String(next));
-			visits = next;
 		} catch {
-			visits = null;
+			// localStorage can be unavailable in private mode.
 		}
 	});
 

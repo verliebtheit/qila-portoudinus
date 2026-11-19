@@ -1,54 +1,46 @@
-﻿<script lang="ts">
+<script lang="ts">
+	import FutsalScene from './FutsalScene.svelte';
+	import FootballScene from './FootballScene.svelte';
+	import SnapsScene from './SnapsScene.svelte';
+
 	type Props = {
 		kind?: string;
 		class?: string;
 	};
 
 	let { kind = 'preview', class: className = '' }: Props = $props();
-
-	const labels: Record<string, string> = {
-		futsal: 'Animated pixel futsal court preview',
-		football: 'Animated pixel football game preview',
-		snaps: 'Animated pixel social app preview'
-	};
-
-	const label = $derived(labels[kind] ?? 'Project preview');
 </script>
 
-<div class={`scene ${className}`} role="img" aria-label={label}>
-	<div class="fallback" aria-hidden="true">
-		<span class="fallback__icon">▣</span>
-		<span class="fallback__text">{kind}</span>
+{#if kind === 'futsal'}
+	<FutsalScene class={className} />
+{:else if kind === 'football'}
+	<FootballScene class={className} />
+{:else if kind === 'snaps'}
+	<SnapsScene class={className} />
+{:else}
+	<div class={['scene', className]} role="img" aria-label={kind + ' project preview'}>
+		<span class="chip">{kind}</span>
 	</div>
-</div>
+{/if}
 
 <style>
 	.scene {
 		position: absolute;
 		inset: 0;
+		display: grid;
+		place-items: center;
 		overflow: hidden;
-		background: var(--cream, #fce8dc);
+		background: var(--surface);
 	}
 
-	.fallback {
-		display: flex;
-		height: 100%;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		gap: 0.5rem;
-		color: var(--muted, #75627b);
-		font-family: var(--font-mono, monospace);
-	}
-
-	.fallback__icon {
-		font-size: 2rem;
-		line-height: 1;
-	}
-
-	.fallback__text {
-		font-size: 0.75rem;
-		letter-spacing: 0.08em;
+	.chip {
+		border: 2px solid var(--line-strong);
+		background: var(--cream);
+		color: var(--muted);
+		padding: 0.35rem 0.6rem;
+		font-family: var(--font-mono);
+		font-size: 0.7rem;
+		letter-spacing: 0.12em;
 		text-transform: uppercase;
 	}
 </style>

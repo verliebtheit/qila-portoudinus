@@ -25,7 +25,8 @@ export type IconName =
 	| 'sparkle'
 	| 'lock'
 	| 'cat'
-	| 'github';
+	| 'github'
+	| 'instagram';
 
 type Rect = [x: number, y: number, w: number, h: number];
 
@@ -399,6 +400,20 @@ export const pixelIcons: Record<IconName, Icon> = {
 			[5, 12, 2, 2],
 			[9, 12, 2, 2],
 			[7, 11, 2, 3]
+		]
+	},
+	instagram: {
+		base: [
+			[3, 2, 10, 12],
+			[2, 3, 12, 10]
+		],
+		detail: [[4, 4, 8, 8]],
+		core: [
+			[6, 6, 4, 1],
+			[6, 9, 4, 1],
+			[6, 7, 1, 2],
+			[9, 7, 1, 2],
+			[10, 4, 1, 1]
 		]
 	}
 };

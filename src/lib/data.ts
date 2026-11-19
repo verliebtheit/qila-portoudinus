@@ -23,12 +23,16 @@ export type Project = {
 	label?: string;
 	image?: string;
 	href?: string;
+	scene?: 'futsal' | 'football' | 'snaps';
+	/** Left empty until Qila shares the actual stack — no invented tools. */
+	tech?: string[];
 };
 
 export type About = {
 	intro: string;
 	background: string;
 	hobbies: string;
+	photo?: string;
 	details: { label: string; value: string }[];
 };
 
@@ -43,6 +47,7 @@ export type Contact = {
 	note: string;
 	github: string;
 	email: string;
+	instagram?: string;
 };
 
 export const site: Site = {
@@ -76,17 +81,26 @@ export const projects: Project[] = [
 	{
 		title: 'Futsal Reservation',
 		label: 'website',
-		description: 'A website for reserving futsal courts.'
+		description: 'A website for reserving futsal courts.',
+		scene: 'futsal',
+		tech: [],
+		href: ''
 	},
 	{
 		title: 'Football Game',
 		label: 'game',
-		description: 'A game with a football theme.'
+		description: 'A game with a football theme.',
+		scene: 'football',
+		tech: [],
+		href: ''
 	},
 	{
 		title: 'Snaps',
 		label: 'social app',
-		description: 'A social media application inspired by Threads.'
+		description: 'A social media application inspired by Threads.',
+		scene: 'snaps',
+		tech: [],
+		href: ''
 	}
 ];
 
@@ -97,6 +111,7 @@ export const about: About = {
 		"Most of what I know comes from exploring, experimenting, and figuring things out one step at a time. I'm especially interested in programming, technology, and game development, and I enjoy making things that feel a little personal.",
 	hobbies:
 		"When I'm not coding or learning something new, I usually spend time gaming, taking photos, or listening to music.",
+	photo: '/images/qila-profile.jpg',
 	details: [
 		{ label: 'Name', value: 'Qila' },
 		{ label: 'Role', value: 'Student Developer' },
@@ -126,7 +141,8 @@ export const skillGroups: SkillGroup[] = [
 export const contact: Contact = {
 	invite:
 		'Want to say hi, share something cool, or talk about projects and ideas? I’d love to hear from you.',
-	note: 'The message form below is the best way to reach me right now while other links are still being set up.',
-	github: '',
-	email: ''
+	note: 'Feel free to reach out via GitHub, email, Instagram, or send a quick note through the message form below!',
+	github: 'https://github.com/verliebtheit',
+	email: 'adalilatisya@gmail.com',
+	instagram: 'https://instagram.com/lasseraphic'
 };

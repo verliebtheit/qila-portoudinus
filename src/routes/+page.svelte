@@ -7,6 +7,11 @@
 	import PixelIcon from '$lib/components/PixelIcon.svelte';
 	import ProjectCard from '$lib/components/ProjectCard.svelte';
 	import Window from '$lib/components/Window.svelte';
+	import DesktopStage from '$lib/components/DesktopStage.svelte';
+	import BootScreen from '$lib/components/BootScreen.svelte';
+	import CursorTrail from '$lib/components/CursorTrail.svelte';
+	import PixelBuddy from '$lib/components/PixelBuddy.svelte';
+	import HitCounter from '$lib/components/HitCounter.svelte';
 
 	let { form }: { form: ActionData } = $props();
 
@@ -16,7 +21,6 @@
 	let ready = $state(false);
 	let menuOpen = $state(false);
 	let status = $state<Status>('idle');
-	let loadingBar = $state(58);
 	let clock = $state('--:--');
 
 	const marqueeItems = [
@@ -52,14 +56,6 @@
 		tick();
 		const clockTimer = setInterval(tick, 30_000);
 
-		const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-		const barTimer = reduced
-			? undefined
-			: setInterval(() => {
-					loadingBar =
-						loadingBar >= 96 ? 42 : Math.min(98, loadingBar + Math.floor(Math.random() * 8) + 2);
-				}, 2400);
-
 		const onResize = () => {
 			if (window.innerWidth >= 1024) menuOpen = false;
 		};
@@ -67,7 +63,6 @@
 
 		return () => {
 			clearInterval(clockTimer);
-			if (barTimer) clearInterval(barTimer);
 			window.removeEventListener('resize', onResize);
 		};
 	});
@@ -86,10 +81,6 @@
 		dark = !dark;
 	}
 
-	function nudgeLoading() {
-		loadingBar = loadingBar >= 96 ? 48 : Math.min(99, loadingBar + 10);
-	}
-
 	function closeMenu() {
 		menuOpen = false;
 	}
@@ -102,10 +93,14 @@
 />
 
 <div class="min-h-dvh text-ink">
+	<BootScreen />
+	<CursorTrail />
 	<a href="#home" class="skip-link" onclick={closeMenu}>skip to content</a>
 
 	<header class="sticky top-0 z-40 border-b-[3px] border-line-strong bg-bg/95 backdrop-blur-sm">
-		<div class="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
+		<div
+			class="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8"
+		>
 			<a
 				href="#home"
 				class="group flex shrink-0 items-center gap-2 font-pixel text-xl text-ink sm:text-2xl"
@@ -190,149 +185,39 @@
 		</nav>
 	</header>
 
-	<main class="relative mx-auto max-w-6xl px-4 pb-20 pt-6 sm:px-6 lg:px-8 lg:pt-10">
+	<main class="relative mx-auto max-w-6xl px-4 pt-6 pb-20 sm:px-6 lg:px-8 lg:pt-10">
 		<div
-			class="pointer-events-none absolute left-1 top-28 hidden text-rose-deep/70 sticker-float xl:block"
+			class="deco deco--near pointer-events-none absolute top-28 -left-3 hidden text-rose-deep/70 xl:block"
 			aria-hidden="true"
 		>
-			<PixelIcon name="star" size={30} />
+			<span class="deco__float"><PixelIcon name="star" size={32} /></span>
 		</div>
 		<div
-			class="pointer-events-none absolute -right-2 top-[42rem] hidden text-rose-deep/60 sticker-float xl:block"
-			style="animation-delay: 1.2s"
+			class="deco deco--near pointer-events-none absolute top-[44rem] -right-3 hidden text-rose-deep/60 xl:block"
+			style="--float-delay: 1.2s; --tilt: 12deg;"
 			aria-hidden="true"
 		>
-			<PixelIcon name="heart" size={26} />
+			<span class="deco__float"><PixelIcon name="heart" size={28} /></span>
 		</div>
 		<div
-			class="pointer-events-none absolute -left-3 top-[90rem] hidden text-sage sticker-float xl:block"
-			style="animation-delay: 0.6s"
+			class="deco deco--near pointer-events-none absolute top-[92rem] -left-4 hidden text-sage xl:block"
+			style="--float-delay: 0.6s; --tilt: -8deg;"
 			aria-hidden="true"
 		>
-			<PixelIcon name="flower" size={30} />
+			<span class="deco__float"><PixelIcon name="flower" size={32} /></span>
+		</div>
+		<div
+			class="deco deco--near pointer-events-none absolute top-[138rem] -right-2 hidden text-bubblegum xl:block"
+			style="--float-delay: 1.8s; --tilt: 6deg;"
+			aria-hidden="true"
+		>
+			<span class="deco__float"><PixelIcon name="cat" size={30} /></span>
 		</div>
 
-		<!-- HOME -->
-		<section
-			id="home"
-			class="grid scroll-mt-28 gap-5 lg:grid-cols-[1.08fr_0.92fr] lg:items-stretch"
-			aria-labelledby="hero-title"
-		>
+		<!-- HOME: INTERACTIVE Y2K DESKTOP -->
+		<section id="home" class="scroll-mt-28" aria-label="Qila's interactive desktop">
 			<div use:reveal={{ y: 18 }}>
-				<Window title={site.welcome} icon="monitor" class="h-full">
-					<div class="space-y-5">
-						<div class="flex flex-wrap items-center gap-2">
-							<span
-								class="inline-flex items-center gap-2 border-2 border-line-strong bg-sage px-2.5 py-1 font-mono text-xs text-plum-deep"
-							>
-								<span class="h-2 w-2 rounded-full bg-success animate-pulse" aria-hidden="true"></span>
-								{site.status}
-							</span>
-							<span
-								class="border-2 border-dashed border-line-soft bg-cream px-2.5 py-1 font-mono text-xs text-muted"
-							>
-								role: {site.role}
-							</span>
-						</div>
-
-						<p class="font-mono text-xs text-muted">
-							<span class="text-rose-deep">qila@desktop</span>:~$ hello
-						</p>
-
-						<div class="space-y-3">
-							<h1
-								id="hero-title"
-								class="max-w-[13ch] font-pixel text-5xl leading-[0.92] text-ink sm:text-6xl lg:text-7xl"
-							>
-								{site.greeting}
-							</h1>
-							<p class="max-w-2xl text-base leading-relaxed text-muted sm:text-lg">
-								{site.intro}
-							</p>
-						</div>
-
-						<div class="flex flex-wrap gap-3">
-							<a href="#projects" class="pixel-btn pixel-btn--primary">
-								open my projects
-								<span aria-hidden="true">↗</span>
-							</a>
-							<a href="#about" class="pixel-btn">
-								<PixelIcon name="user" size={16} />
-								profile.exe
-							</a>
-						</div>
-
-						<div class="border-2 border-line-strong bg-cream p-3">
-							<div class="mb-2 flex items-center justify-between gap-3 font-mono text-xs text-muted">
-								<span>booting qila.exe…</span>
-								<span>{loadingBar}%</span>
-							</div>
-							<div class="h-5 border-2 border-line-strong bg-surface p-0.5" aria-hidden="true">
-								<div
-									class="h-full bg-[repeating-linear-gradient(90deg,var(--rose)_0_14px,var(--bubblegum)_14px_28px)] transition-[width] duration-500"
-									style={`width: ${loadingBar}%`}
-								></div>
-							</div>
-							<button
-								type="button"
-								onclick={nudgeLoading}
-								class="mt-2 font-mono text-xs text-muted underline decoration-dotted underline-offset-4 hover:text-ink"
-							>
-								click to boost loading ✦
-							</button>
-						</div>
-					</div>
-				</Window>
-			</div>
-
-			<div use:reveal={{ delay: 100 }}>
-				<Window title="desktop_notes.txt" icon="star" class="h-full">
-					<div class="space-y-5">
-						<div class="relative border-2 border-dashed border-line-soft bg-cream p-4 retro-dots">
-							<p class="font-pixel text-3xl text-ink">{site.name}</p>
-							<p class="mt-1 font-mono text-xs text-muted">aka {site.brand} · {site.role}</p>
-							<div class="mt-4 grid grid-cols-3 gap-2 text-center" aria-hidden="true">
-								<div class="border-2 border-line-strong bg-pink py-3 text-plum-deep">
-									<span class="mx-auto block w-fit"><PixelIcon name="heart" size={18} /></span>
-									<span class="mt-1 block font-mono text-[10px]">cute</span>
-								</div>
-								<div class="border-2 border-line-strong bg-sage py-3 text-plum-deep">
-									<span class="mx-auto block w-fit"><PixelIcon name="flower" size={18} /></span>
-									<span class="mt-1 block font-mono text-[10px]">cozy</span>
-								</div>
-								<div class="border-2 border-line-strong bg-surface py-3 text-ink">
-									<span class="mx-auto block w-fit text-rose-deep"
-										><PixelIcon name="star" size={18} /></span
-									>
-									<span class="mt-1 block font-mono text-[10px]">curious</span>
-								</div>
-							</div>
-						</div>
-
-						<div>
-							<p class="font-pixel text-xl text-ink">a few things i love</p>
-							<ul class="mt-2 flex flex-wrap gap-2">
-								{#each site.interests as interest (interest.label)}
-									<li
-										class="inline-flex items-center gap-1.5 border-2 border-line-strong bg-cream px-2.5 py-1 font-mono text-[11px] text-ink"
-									>
-										<span class="text-rose-deep" aria-hidden="true">
-											<PixelIcon name={interest.icon} size={13} />
-										</span>
-										{interest.label}
-									</li>
-								{/each}
-							</ul>
-						</div>
-
-						<div
-							class="border-2 border-line-strong bg-surface px-4 py-3 font-mono text-xs leading-relaxed text-muted"
-						>
-							<span class="text-rose-deep">note:</span> this site is a little retro corner of the internet
-							— still learning, still building, and having fun with it.
-						</div>
-					</div>
-				</Window>
+				<DesktopStage />
 			</div>
 		</section>
 
@@ -342,7 +227,8 @@
 				<div
 					class="flex items-center gap-2 border-b-2 border-line-strong bg-cream px-3 py-1.5 font-mono text-xs text-muted"
 				>
-					<span class="text-rose-deep" aria-hidden="true"><PixelIcon name="music" size={13} /></span>
+					<span class="text-rose-deep" aria-hidden="true"><PixelIcon name="music" size={13} /></span
+					>
 					<span>now_playing.txt</span>
 					<span class="ml-auto hidden sm:inline">loop / on</span>
 				</div>
@@ -372,14 +258,66 @@
 		<section id="about" class="scroll-mt-28 pt-16 lg:pt-24" aria-label="About Qila">
 			<div use:reveal>
 				<Window title="profile.exe — about me" icon="user">
-					<div class="grid gap-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
-						<div class="space-y-4">
-							<p class="text-lg leading-relaxed text-ink sm:text-xl">{about.intro}</p>
-							<p class="text-base leading-relaxed text-muted sm:text-lg">{about.background}</p>
-							<p class="text-base leading-relaxed text-muted sm:text-lg">{about.hobbies}</p>
+					<div class="grid gap-6 lg:grid-cols-[280px_1fr] lg:items-start">
+						<!-- Retro Photobooth Photo Card -->
+						<div class="space-y-3">
+							<div class="pixel-border-sm bg-cream p-3">
+								<div
+									class="mb-2 flex items-center justify-between border-b-2 border-line-strong pb-1.5 font-mono text-[10px] text-muted"
+								>
+									<span class="inline-flex items-center gap-1.5 font-pixel text-xs text-ink">
+										<span class="h-2 w-2 animate-pulse rounded-full bg-rose-deep" aria-hidden="true"
+										></span>
+										snap_01.jpg
+									</span>
+									<span
+										class="border border-line-strong bg-pink px-1.5 py-0.5 font-mono text-[9px] font-bold text-plum-deep uppercase"
+									>
+										2026.cam
+									</span>
+								</div>
+
+								<div
+									class="relative overflow-hidden border-2 border-line-strong bg-surface shadow-[3px_3px_0_0_var(--shadow)]"
+								>
+									<img
+										src={about.photo}
+										alt="Qila - Student Developer"
+										class="h-auto w-full object-cover"
+										loading="lazy"
+									/>
+									<span
+										class="absolute right-2 bottom-2 border-2 border-line-strong bg-pink px-2 py-0.5 font-pixel text-xs text-plum-deep shadow-[2px_2px_0_0_var(--shadow)]"
+									>
+										qila ✿
+									</span>
+								</div>
+
+								<div
+									class="mt-2.5 flex items-center justify-between font-mono text-[10px] text-muted"
+								>
+									<span>filter: y2k_soft</span>
+									<span class="font-semibold text-rose-deep">★ photobooth</span>
+								</div>
+							</div>
+
+							<div
+								class="border-2 border-dashed border-line-soft bg-surface p-2.5 text-center font-mono text-[11px] text-muted"
+							>
+								<span class="text-rose-deep">qila@desktop</span>:~$ cute & curious :3
+							</div>
 						</div>
 
-						<div class="space-y-3">
+						<!-- Bio & Details -->
+						<div class="space-y-4">
+							<div class="space-y-3">
+								<p class="text-lg leading-relaxed font-medium text-ink sm:text-xl">
+									{about.intro}
+								</p>
+								<p class="text-base leading-relaxed text-muted">{about.background}</p>
+								<p class="text-base leading-relaxed text-muted">{about.hobbies}</p>
+							</div>
+
 							<div class="grid gap-3 sm:grid-cols-2">
 								{#each about.details as detail (detail.label)}
 									<div class="border-2 border-line-strong bg-cream px-4 py-3">
@@ -391,11 +329,11 @@
 								{/each}
 							</div>
 
-							<div class="pixel-border-sm bg-surface p-4 retro-dots">
+							<div class="pixel-border-sm retro-dots bg-surface p-4">
 								<p class="font-pixel text-2xl text-ink">personality</p>
 								<p class="mt-1 font-mono text-xs leading-relaxed text-muted">
-									Creative, curious, playful, and a little quirky — I like projects that feel personal
-									and a bit like me.
+									Creative, curious, playful, and a little quirky — I like projects that feel
+									personal and a bit like me.
 								</p>
 							</div>
 						</div>
@@ -410,8 +348,8 @@
 				<Window title="my_projects/ — projects" icon="folder">
 					<div class="mb-5 flex flex-wrap items-end justify-between gap-3">
 						<p class="max-w-2xl text-base leading-relaxed text-muted sm:text-lg">
-							A small collection of things I’ve worked on or explored as a student developer. Each card
-							is a little preview of what I’ve been learning.
+							A small collection of things I’ve worked on or explored as a student developer. Each
+							card is a little preview of what I’ve been learning.
 						</p>
 						<span
 							class="border-2 border-dashed border-line-soft bg-cream px-3 py-1 font-mono text-xs text-muted"
@@ -435,8 +373,8 @@
 				<Window title="skills.exe — skills" icon="star">
 					<div class="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
 						<p class="max-w-2xl text-base leading-relaxed text-muted sm:text-lg">
-							I’m still learning and growing, so this is an honest snapshot of where I am right now —
-							curious, practicing, and getting better bit by bit.
+							I’m still learning and growing, so this is an honest snapshot of where I am right now
+							— curious, practicing, and getting better bit by bit.
 						</p>
 						<span
 							class="inline-flex w-fit items-center gap-2 border-2 border-line-strong bg-sage px-3 py-1 font-mono text-xs text-plum-deep"
@@ -504,25 +442,18 @@
 									<a
 										href={contact.github}
 										target="_blank"
-										rel="noopener noreferrer"
+										rel="external noopener noreferrer"
 										class="pixel-border-sm flex items-center justify-between bg-surface px-4 py-3 font-pixel text-xl text-ink transition hover:-translate-y-0.5 hover:bg-pink hover:text-plum-deep"
 									>
 										<span class="inline-flex items-center gap-2">
 											<PixelIcon name="github" size={17} />
 											GitHub
 										</span>
-										<span aria-hidden="true">↗</span>
-									</a>
-								{:else}
-									<div
-										class="pixel-border-sm flex items-center justify-between bg-surface px-4 py-3 font-pixel text-xl text-ink"
-									>
-										<span class="inline-flex items-center gap-2">
-											<PixelIcon name="github" size={17} />
-											GitHub
+										<span class="flex items-center gap-2 font-mono text-xs text-muted">
+											<span>verliebtheit</span>
+											<span aria-hidden="true">↗</span>
 										</span>
-										<span class="font-mono text-xs text-muted">link pending</span>
-									</div>
+									</a>
 								{/if}
 
 								{#if contact.email}
@@ -534,18 +465,29 @@
 											<PixelIcon name="mail" size={17} />
 											Email
 										</span>
-										<span aria-hidden="true">✉</span>
+										<span class="flex items-center gap-2 font-mono text-xs text-muted">
+											<span>{contact.email}</span>
+											<span aria-hidden="true">✉</span>
+										</span>
 									</a>
-								{:else}
-									<div
-										class="pixel-border-sm flex items-center justify-between bg-surface px-4 py-3 font-pixel text-xl text-ink"
+								{/if}
+
+								{#if contact.instagram}
+									<a
+										href={contact.instagram}
+										target="_blank"
+										rel="external noopener noreferrer"
+										class="pixel-border-sm flex items-center justify-between bg-surface px-4 py-3 font-pixel text-xl text-ink transition hover:-translate-y-0.5 hover:bg-pink hover:text-plum-deep"
 									>
 										<span class="inline-flex items-center gap-2">
-											<PixelIcon name="mail" size={17} />
-											Email
+											<PixelIcon name="instagram" size={17} />
+											Instagram
 										</span>
-										<span class="font-mono text-xs text-muted">coming soon</span>
-									</div>
+										<span class="flex items-center gap-2 font-mono text-xs text-muted">
+											<span>@lasseraphic</span>
+											<span aria-hidden="true">↗</span>
+										</span>
+									</a>
 								{/if}
 							</div>
 						</div>
@@ -668,12 +610,15 @@
 			</div>
 
 			<div class="flex flex-wrap items-center gap-3 font-mono text-xs text-muted">
+				<HitCounter />
+				<span aria-hidden="true">·</span>
 				<a href="#home" class="underline decoration-dotted underline-offset-4 hover:text-ink">
 					back to top ↑
 				</a>
 				<span aria-hidden="true">·</span>
 				<span class="inline-flex items-center gap-1.5">
-					<span class="text-rose-deep" aria-hidden="true"><PixelIcon name="heart" size={11} /></span>
+					<span class="text-rose-deep" aria-hidden="true"><PixelIcon name="heart" size={11} /></span
+					>
 					© 2026 {site.name}
 				</span>
 				<span class="hidden sm:inline" aria-hidden="true">·</span>
@@ -681,6 +626,8 @@
 			</div>
 		</div>
 	</footer>
+
+	<PixelBuddy />
 </div>
 
 <style>
